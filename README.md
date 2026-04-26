@@ -7,7 +7,7 @@
 ![Theme](https://img.shields.io/badge/Theme-Cyberpunk%20Black-black)
 
 ## 🌌 Overview
-CRMS is a full-stack, enterprise-grade solution designed for police departments and judiciary branches. It features a stunning "pitch-black" command center aesthetic, inspired by modern tactical interfaces. The system provides real-time tracking of FIRs, Evidence, Case Files, and Court Hearings with advanced biometric-themed authentication.
+CRMS is a full-stack, enterprise-grade solution designed for police departments and judiciary branches. The system provides real-time tracking of FIRs, Evidence, Case Files, and Court Hearings with advanced biometric-themed authentication.
 
 ---
 
