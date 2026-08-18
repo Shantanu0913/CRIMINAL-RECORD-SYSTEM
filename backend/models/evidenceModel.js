@@ -25,20 +25,29 @@ const EvidenceModel = {
   },
 
   async create(data) {
-    const { case_id, description, type, date_collected } = data;
+    const { case_id, description, type, file_url, file_name, media_type, date_collected } = data;
     const [result] = await pool.query(
-      'INSERT INTO Evidence (case_id, description, type, date_collected) VALUES (?, ?, ?, ?)',
-      [case_id || null, description, type, date_collected || null]
+      'INSERT INTO Evidence (case_id, description, type, file_url, file_name, media_type, date_collected) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [case_id || null, description, type, file_url || null, file_name || null, media_type || null, date_collected || null]
     );
     return { evidence_id: result.insertId, ...data };
   },
 
   async update(id, data) {
-    const { case_id, description, type, date_collected } = data;
+    const { case_id, description, type, file_url, file_name, media_type, date_collected } = data;
     await pool.query(
-      'UPDATE Evidence SET case_id = ?, description = ?, type = ?, date_collected = ? WHERE evidence_id = ?',
-      [case_id || null, description, type, date_collected || null, id]
+      `UPDATE Evidence SET 
+        case_id = ?, 
+        description = ?, 
+        type = ?, 
+        file_url = COALESCE(?, file_url), 
+        file_name = COALESCE(?, file_name), 
+        media_type = COALESCE(?, media_type), 
+        date_collected = ? 
+       WHERE evidence_id = ?`,
+      [case_id || null, description, type, file_url, file_name, media_type, date_collected || null, id]
     );
+    return this.getById(id);
   },
 
   async delete(id) {

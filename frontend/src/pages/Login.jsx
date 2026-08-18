@@ -222,7 +222,16 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await API.post('/login', { email, password });
+      const roleMap = {
+        'ADMIN': 'Admin',
+        'OFFICER': 'Police Officer',
+        'COURT CLERK': 'Court Clerk'
+      };
+      const res = await API.post('/login', {
+        email,
+        password,
+        role: roleMap[activeRole] || activeRole
+      });
       if (res.data.success) {
         login(res.data.user);
 

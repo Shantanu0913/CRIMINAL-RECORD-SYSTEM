@@ -63,6 +63,28 @@ const firController = {
       console.error('Error deleting FIR:', error);
       res.status(500).json({ success: false, message: 'Error deleting FIR' });
     }
+  },
+
+  async addEvidence(req, res) {
+    try {
+      const pool = require('../config/db');
+      const { description, type = 'Photo', file_url, file_name, media_type } = req.body;
+      const firId = req.params.id;
+
+      const [result] = await pool.query(
+        'INSERT INTO Evidence (fir_id, description, type, file_url, file_name, media_type, date_collected) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+        [firId, description || 'FIR Evidence', type, file_url || null, file_name || null, media_type || type || 'Photo']
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Evidence attached to FIR successfully',
+        data: { evidence_id: result.insertId, fir_id: firId, description, type, file_url, file_name, media_type }
+      });
+    } catch (error) {
+      console.error('Error attaching evidence to FIR:', error);
+      res.status(500).json({ success: false, message: 'Error attaching evidence to FIR' });
+    }
   }
 };
 

@@ -198,8 +198,12 @@ export default function Hearings() {
                 <tr><td colSpan="9" className="empty-row">No hearings found</td></tr>
               ) : filtered.map(h => {
                 const m = statusMeta[h.status] || statusMeta['Scheduled'];
-                return (
-                  <tr key={h.hearing_id}>
+                  <tr 
+                    key={h.hearing_id} 
+                    className="clickable-row"
+                    onClick={() => setViewItem(h)}
+                    title="Click to view hearing details & judge remarks"
+                  >
                     <td className="id-cell">{h.hearing_id}</td>
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -235,13 +239,30 @@ export default function Hearings() {
                     </td>
                     <td>
                       <div className="actions-cell">
-                        <button className="icon-btn view" title="View" onClick={() => setViewItem(h)}><HiOutlineEye /></button>
-                        <button className="icon-btn edit" title="Edit" onClick={() => openEdit(h)}><HiOutlinePencil /></button>
-                        <button className="icon-btn delete" title="Delete" onClick={() => setDeleteConfirm(h)}><HiOutlineTrash /></button>
+                        <button 
+                          className="icon-btn view" 
+                          title="View Hearing" 
+                          onClick={(e) => { e.stopPropagation(); setViewItem(h); }}
+                        >
+                          <HiOutlineEye />
+                        </button>
+                        <button 
+                          className="icon-btn edit" 
+                          title="Edit Hearing" 
+                          onClick={(e) => { e.stopPropagation(); openEdit(h); }}
+                        >
+                          <HiOutlinePencil />
+                        </button>
+                        <button 
+                          className="icon-btn delete" 
+                          title="Delete Hearing" 
+                          onClick={(e) => { e.stopPropagation(); setDeleteConfirm(h); }}
+                        >
+                          <HiOutlineTrash />
+                        </button>
                       </div>
                     </td>
                   </tr>
-                );
               })}
             </tbody>
           </table>

@@ -4,7 +4,7 @@ const authController = {
   // POST /api/login
   async login(req, res) {
     try {
-      const { email, password } = req.body;
+      const { email, password, role: requestedRole } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({
@@ -30,8 +30,17 @@ const authController = {
         });
       }
 
-      // Determine role from Admin / Police_Officer tables
-      const role = await UserModel.getRole(user.user_id);
+      // Determine role from Admin / Police_Officer / Court_Clerk tables
+      const role = await UserModel.getRole(user.user_id, requestedRole);
+
+      if (!role) {
+        return res.status(403).json({
+          success: false,
+          message: `ACCESS DENIED: Account lacks '${requestedRole}' clearance level.`
+        });
+      }
+
+      const availableRoles = await UserModel.getAllUserRoles(user.user_id);
 
       // Return user info (excluding password)
       const { password: _, ...userInfo } = user;
@@ -39,7 +48,7 @@ const authController = {
       res.json({
         success: true,
         message: 'Login successful',
-        user: { ...userInfo, role }
+        user: { ...userInfo, role, availableRoles }
       });
     } catch (error) {
       console.error('Login error:', error);

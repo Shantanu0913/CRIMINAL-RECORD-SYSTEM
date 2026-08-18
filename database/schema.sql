@@ -42,6 +42,10 @@ CREATE TABLE FIR (
     description TEXT,
     officer_id INT,
     station_id INT,
+    group_photo_url LONGTEXT,
+    incident_location VARCHAR(255),
+    fir_status VARCHAR(50) DEFAULT 'Under Investigation',
+    severity_level VARCHAR(50) DEFAULT 'High',
     FOREIGN KEY (officer_id) REFERENCES Police_Officer(officer_id),
     FOREIGN KEY (station_id) REFERENCES Police_Station(station_id)
 );
@@ -51,7 +55,16 @@ CREATE TABLE Criminal (
     name VARCHAR(100),
     gender VARCHAR(10),
     address VARCHAR(200),
-    remarks TEXT
+    remarks TEXT,
+    photo_url LONGTEXT,
+    face_enrolled BOOLEAN DEFAULT FALSE,
+    face_enrolled_at DATETIME,
+    fingerprint_data LONGTEXT,
+    fingerprint_type VARCHAR(50) DEFAULT 'Right Thumb',
+    fingerprint_quality INT DEFAULT 0,
+    fingerprint_enrolled BOOLEAN DEFAULT FALSE,
+    fingerprint_enrolled_at DATETIME,
+    biometric_status VARCHAR(50) DEFAULT 'Pending'
 );
 
 CREATE TABLE FIR_Criminal (
@@ -101,10 +114,26 @@ CREATE TABLE Case_File (
 CREATE TABLE Evidence (
     evidence_id INT AUTO_INCREMENT PRIMARY KEY,
     case_id INT,
+    fir_id INT,
     description TEXT,
     type VARCHAR(50),
+    file_url LONGTEXT,
+    file_name VARCHAR(255),
+    media_type VARCHAR(50),
     date_collected DATE,
-    FOREIGN KEY (case_id) REFERENCES Case_File(case_id)
+    FOREIGN KEY (case_id) REFERENCES Case_File(case_id),
+    FOREIGN KEY (fir_id) REFERENCES FIR(fir_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Criminal_Media (
+    media_id INT AUTO_INCREMENT PRIMARY KEY,
+    criminal_id INT,
+    media_type VARCHAR(50) DEFAULT 'Photo',
+    file_url LONGTEXT,
+    file_name VARCHAR(255),
+    title VARCHAR(200),
+    date_added DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (criminal_id) REFERENCES Criminal(criminal_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Hearing (
@@ -128,10 +157,14 @@ INSERT INTO Users VALUES
 (6,'Admin User','123','9871110006','456'),
 (7,'Rajendra Verma','clerk@1.gov','9871110007','pass'),
 (8,'Sita Ram','clerk@2.gov','9871110008','pass'),
-(9,'Gopal Krishnan','clerk@3.gov','9871110009','pass');
+(9,'Gopal Krishnan','clerk@3.gov','9871110009','pass'),
+(10,'SAM','shantxanu@gmail.com','8275400000','SAM');
 
 -- ADMIN
-INSERT INTO Admin VALUES (1,6,'Head Office','9871110006');
+INSERT INTO Admin VALUES 
+(1,6,'Head Office','9871110006'),
+(2,10,'HQ','8275400000');
+
 
 -- POLICE STATION
 INSERT INTO Police_Station VALUES
@@ -141,6 +174,7 @@ INSERT INTO Police_Station VALUES
 
 -- POLICE OFFICERS
 INSERT INTO Police_Officer VALUES
+(100,10,'DSP100','DSP',1),
 (101,1,'DSP101','DSP',1),
 (102,2,'INS102','Inspector',1),
 (103,3,'INS103','Inspector',2),
@@ -157,7 +191,8 @@ INSERT INTO Court VALUES
 INSERT INTO Court_Clerk VALUES
 (1, 7, 1),
 (2, 8, 2),
-(3, 9, 3);
+(3, 9, 3),
+(4, 10, 1);
 
 -- CRIMINALS
 INSERT INTO Criminal VALUES

@@ -65,7 +65,23 @@ const Sidebar = () => {
           </div>
           <div className="user-details">
             <span className="user-name">{user?.name || user?.full_name || 'User'}</span>
-            <span className="user-role">{user?.role || 'Officer'}</span>
+            {user?.availableRoles && user.availableRoles.length > 1 ? (
+              <select
+                className="role-switcher-select"
+                value={user.role}
+                onChange={(e) => {
+                  const updatedRole = e.target.value;
+                  login({ ...user, role: updatedRole });
+                }}
+                title="Switch Active Clearance"
+              >
+                {user.availableRoles.map(r => (
+                  <option key={r} value={r}>⚡ {r}</option>
+                ))}
+              </select>
+            ) : (
+              <span className="user-role">{user?.role || 'Officer'}</span>
+            )}
           </div>
         </div>
         <button className="logout-btn" onClick={handleLogout} title="Logout">
