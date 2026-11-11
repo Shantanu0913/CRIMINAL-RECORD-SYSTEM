@@ -21,3 +21,7 @@ dist-ssr/
 # OS
 .DS_Store
 Thumbs.db
+
+# Database backups
+database/backup_*.sql
+
