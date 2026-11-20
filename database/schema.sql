@@ -738,54 +738,46 @@ SELECT
 FROM Criminal;
 
 -- PART 11: TRANSACTION DEMONSTRATION
-
--- IMPORTANT:
--- Run this section separately when demonstrating.
--- COMMIT permanently saves the changes.
--- ROLLBACK cancels uncommitted changes.
-
-
 -- TRANSACTION WITH COMMIT
 
--- START TRANSACTION;
+START TRANSACTION;
+UPDATE FIR
+SET fir_status = 'Under Investigation'
+WHERE fir_id = 1;
 
--- UPDATE FIR
--- SET fir_status = 'Under Investigation'
--- WHERE fir_id = 1;
+UPDATE Case_File
+SET status = 'Investigation'
+WHERE case_id = 1;
 
--- UPDATE Case_File
--- SET status = 'Investigation'
--- WHERE case_id = 1;
-
--- COMMIT;
+COMMIT;
 
 
 -- TRANSACTION WITH ROLLBACK
 
--- START TRANSACTION;
+START TRANSACTION;
 
--- UPDATE FIR
--- SET fir_status = 'Closed'
--- WHERE fir_id = 1;
+UPDATE FIR
+SET fir_status = 'Closed'
+WHERE fir_id = 1;
 
--- ROLLBACK;
+ROLLBACK;
 
 
 -- PART 12: TRIGGER TESTING
 -- Run these separately to test triggers.
 
--- INSERT INTO Criminal
--- (name,gender,address,remarks)
--- VALUES
--- ('Test Criminal','Male','Mumbai','Trigger testing');
+INSERT INTO Criminal
+(name,gender,address,remarks)
+VALUES
+('Test Criminal','Male','Mumbai','Trigger testing');
 
--- UPDATE Criminal
--- SET remarks = 'Updated remarks'
--- WHERE criminal_id = 1;
+UPDATE Criminal
+SET remarks = 'Updated remarks'
+WHERE criminal_id = 1;
 
 -- Check audit logs:
 
--- SELECT * FROM Criminal_Audit;
+SELECT * FROM Criminal_Audit;
 
 
 -- PART 13: ADVANCED SQL VERIFICATION
@@ -823,4 +815,3 @@ SHOW INDEX FROM Criminal;
 SELECT VERSION();
 
 -- END OF CRIMINAL RECORD MANAGEMENT SYSTEM
--- ==========================================================
